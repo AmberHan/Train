@@ -14,8 +14,12 @@ import jieba.posseg as psg
 from cnradical import Radical, RunOption
 import shutil
 from random import shuffle
+import tensorflow as tf
 
 train_dir = 'train/20230810'
+
+# 设置随机种子
+tf.random.set_seed(17)
 
 
 def is_Brackets(x):
@@ -47,14 +51,15 @@ def process_text(idx, split_method=None, split_name='train'):
     # -------------------------获取标签----------------------------
     tag_list = ['O' for s in texts for x in s]
     # 读取这个文件对应的ann文件
-    tag = pd.read_csv(f'data/{train_dir}/{idx}.ann', header=None, sep='\t')
-    for i in range(tag.shape[0]):
-        tag_item = tag.iloc[i][1].split(' ')  # 对获取对实体类别以及起始位置
-        cls, start, end = tag_item[0], int(tag_item[1]), int(tag_item[-1])  # 转换成对应的类型
-        tag_list[start] = 'B-' + cls  # 起始位置写入B-实体类别
-        for j in range(start + 1, end):  # 后面的位置写I-实体类别
-            tag_list[j] = 'I-' + cls
-    assert len([x for s in texts for x in s]) == len(tag_list)  # 保证两个序列长度一直
+    if 'predict' not in idx:
+        tag = pd.read_csv(f'data/{train_dir}/{idx}.ann', header=None, sep='\t')
+        for i in range(tag.shape[0]):
+            tag_item = tag.iloc[i][1].split(' ')  # 对获取对实体类别以及起始位置
+            cls, start, end = tag_item[0], int(tag_item[1]), int(tag_item[-1])  # 转换成对应的类型
+            tag_list[start] = 'B-' + cls  # 起始位置写入B-实体类别
+            for j in range(start + 1, end):  # 后面的位置写I-实体类别
+                tag_list[j] = 'I-' + cls
+        assert len([x for s in texts for x in s]) == len(tag_list)  # 保证两个序列长度一直
 
     # -------------------------提取词性和词边界特征-------------------------
     word_bounds = ['M' for item in tag_list]  # word_bounds保留分词的边界，首先给所有的字都标上B标记。B-begin M-mid E-end S-单独的字
@@ -88,6 +93,10 @@ def process_text(idx, split_method=None, split_name='train'):
     data['bound'] = bounds
     data['flag'] = flags
     data['label'] = tags
+    # 将flag列内的所有内容替换为"abc"
+    # data['flag'] = [['abc'] * len(s) for s in data['flag']]
+    # 将bound列内的所有内容替换为"abc"
+    # data['bound'] = [['abc'] * len(s) for s in data['bound']]
 
     # ----------------------获取拼音特征---------------------------
     radical = Radical(RunOption.Radical)  # 提取偏旁部首
@@ -96,11 +105,16 @@ def process_text(idx, split_method=None, split_name='train'):
     data['radical'] = [
         [radical.trans_ch(x) if radical.trans_ch(x) is not None else 'KUO' if is_Brackets(x) else 'UNK' for x in s]
         for s in texts]
+    # 将radical列内的所有内容替换为"abc"
+    # data['radical'] = [['abc'] * len(s) for s in data['radical']]
+
     # 提取拼音特征，对于没有拼音的字标上PAD
     data['pinyin'] = [
         [pinyin.trans_ch(x) if pinyin.trans_ch(x) is not None else 'KUO' if is_Brackets(x) else 'UNK' for x in s] for
         s in
         texts]  # 把标点替换成PAD
+    # 将pinyin列内的所有内容替换为"abc"
+    # data['pinyin'] = [['abc'] * len(s) for s in data['pinyin']]
 
     # ------------------------存储数据-----------------------------
     num_samples = len(texts)  # 获取有多少句话 等于是有多少个样本
@@ -127,34 +141,49 @@ def process_text(idx, split_method=None, split_name='train'):
     dataset.to_csv(save_path, index=False, encoding='utf-8')
 
 
-def multi_process(split_method=None, train_radio=0.8):  # 0.8来做训练
-    if not os.path.exists('data/prepare/predict'):
-        os.makedirs('data/prepare/predict')
-    if os.path.exists('data/prepare/'):
-        shutil.rmtree('data/prepare/')
-    if not os.path.exists('data/prepare/train/'):
-        os.makedirs('data/prepare/train')
-        os.makedirs('data/prepare/test')
-        os.makedirs('data/prepare/results')
-    idxs = list(
-        set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if file.endswith('.txt')]))  # 获取所有文件名字
-    shuffle(idxs)  # 打乱顺序
-    index = int(len(idxs) * train_radio)  # 拿到训练集的截止下标
-    train_ids = idxs[:index]  # 训练集文件名集合
-    test_ids = idxs[index:]  # 测试集文件名集合
-
+def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8来做训练
     import multiprocessing as mp
     num_cpus = mp.cpu_count()  # 获取机器cpu的个数
     my_use = num_cpus // 2
     print("CPU核数为:" + str(num_cpus) + ",我使用" + str(my_use))
     pool = mp.Pool(my_use)
     results = []
-    for idx in train_ids:  #
-        result = pool.apply_async(process_text, args=(idx, split_method, 'train'))
-        results.append(result)
-    for idx in test_ids:  #
-        result = pool.apply_async(process_text, args=(idx, split_method, 'test'))
-        results.append(result)
+    if onlyPredict:
+        if os.path.exists('data/prepare/predict'):
+            shutil.rmtree('data/prepare/predict')
+            os.makedirs('data/prepare/predict')
+        pre_idxs = list(
+            set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
+                 file.endswith('.txt') and file.startswith("predict")]))
+        for idx in pre_idxs:
+            result = pool.apply_async(process_text, args=(idx, split_method, 'predict'))
+            results.append(result)
+    else:
+        if os.path.exists('data/prepare/'):
+            shutil.rmtree('data/prepare/')
+        if not os.path.exists('data/prepare/train/'):
+            os.makedirs('data/prepare/train')
+            os.makedirs('data/prepare/test')
+            os.makedirs('data/prepare/predict')
+        idxs = list(
+            set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
+                 file.endswith('.txt') and not file.startswith("predict")]))  # 获取所有文件名字
+        pre_idxs = list(
+            set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
+                 file.endswith('.txt') and file.startswith("predict")]))
+        shuffle(idxs)  # 打乱顺序
+        index = int(len(idxs) * train_radio)  # 拿到训练集的截止下标
+        train_ids = idxs[:index]  # 训练集文件名集合
+        test_ids = idxs[index:]  # 测试集文件名集合
+        for idx in train_ids:  #
+            result = pool.apply_async(process_text, args=(idx, split_method, 'train'))
+            results.append(result)
+        for idx in test_ids:  #
+            result = pool.apply_async(process_text, args=(idx, split_method, 'test'))
+            results.append(result)
+        for idx in pre_idxs:
+            result = pool.apply_async(process_text, args=(idx, split_method, 'predict'))
+            results.append(result)
     pool.close()
     pool.join()
     [r.get() for r in results]
@@ -218,12 +247,13 @@ def get_dict():
         pickle.dump(map_dict, f)
 
 
-def dataMain():
+def dataMain(onlypredict=False):
     # print(process_text('003', split_method=split_text,split_name='train'))
     #  multi_process()
     # print(set([file.split('.')[0] for file in os.listdir('data/' + train_dir)]))
-    multi_process(split_text)
-    get_dict()
+    multi_process(split_text, onlypredict)
+    if not onlypredict:
+        get_dict()
     # with open(f'data/prepare/dict.pk1','rb') as f:
     #     data=pickle.load(f)
     # print(data['bound'])

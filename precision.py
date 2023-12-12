@@ -45,6 +45,7 @@ def cal(labels):
     f1 = 2 * (precision * recall) / (precision + recall)
 
     # 打印FN、FP、精确度、召回率和F1分数
+    print("拼音+词边界：")    # 词性+词边界+偏旁部首+拼音：
     print("真正例（TP）:", TP)
     print("假负例（FN）:", FN)
     print("假正例（FP）:", FP)
@@ -61,10 +62,10 @@ def write_csv(filename, ret):
 
 
 # data/predict/final目录下是根据results生成的；check.csv是去除O之后的, check_word是合成的单词（需要核查的）
-def cal_csv():
+def cal_csv(type):
     final_dir = 'data/prepare/final'
     # 使用glob获取目录中所有的CSV文件
-    csv_files = glob.glob(os.path.join(final_dir, 'check_word*.csv'))
+    csv_files = glob.glob(os.path.join(final_dir, type + '*.csv'))
 
     # 对文件进行排序
     csv_files.sort()  # reverse=True
@@ -75,6 +76,13 @@ def cal_csv():
         print("*" * 100)
 
 
+def cal_csvs():
+    print("test集合" + "*" * 200)
+    cal_csv("check_test_word")
+    # print("预测集合" + "*" * 200)
+    # cal_csv("check_predict_word")
+
+
 # 打印的是最终的结果
 if __name__ == '__main__':
-    cal_csv()
+    cal_csvs()

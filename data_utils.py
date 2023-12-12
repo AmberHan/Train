@@ -15,6 +15,7 @@ from tqdm import tqdm
 import os
 import random
 import math
+from read_pkl import *
 
 
 def get_data_with_windows(name='train'):
@@ -26,8 +27,6 @@ def get_data_with_windows(name='train'):
 
     results = []
     root = os.path.join('data/prepare', name)
-    if name == "predict":
-        root = os.path.join('data/', name)
     files = list(os.listdir(root))
 
     for file in tqdm(files):
@@ -49,20 +48,22 @@ def get_data_with_windows(name='train'):
 
         # ---------------------------------数据增强-------------------------------
         # 拼接的目的： 不拼、拼两个、拼三个可以增加学习长短句子的能力，即数据增强
-        two = []
-        for i in range(len(result) - 1):
-            first = result[i]
-            second = result[i + 1]
-            two.append([first[k] + second[k] for k in range(len(first))])
+        results.extend(result)
+        if name == 'train':
+            two = []
+            for i in range(len(result) - 1):
+                first = result[i]
+                second = result[i + 1]
+                two.append([first[k] + second[k] for k in range(len(first))])
 
-        three = []
-        for i in range(len(result) - 2):
-            first = result[i]
-            second = result[i + 1]
-            third = result[i + 2]
-            three.append([first[k] + second[k] + third[k] for k in range(len(first))])
+            three = []
+            for i in range(len(result) - 2):
+                first = result[i]
+                second = result[i + 1]
+                third = result[i + 2]
+                three.append([first[k] + second[k] + third[k] for k in range(len(first))])
+            results.extend(two + three)
 
-        results.extend(result + two + three)
     with open(f'data/prepare/' + name + '.pkl', 'wb') as f:
         pickle.dump(results, f)
 
@@ -77,16 +78,19 @@ class BatchManager(object):
     def __init__(self, batch_size, name='train'):
         with open(f'data/prepare/' + name + '.pkl', 'rb') as f:
             data = pickle.load(f)  # len表示有多少句话
-        self.batch_data = self.sort_and_pad(data, batch_size)
+        self.batch_data, self.batch_index = self.sort_and_pad(data, batch_size)
         self.len_data = len(self.batch_data)
 
     def sort_and_pad(self, data, batch_size):
         num_batch = int(math.ceil(len(data) / batch_size))  # 共有多少个批次
-        sorted_data = sorted(data, key=lambda x: len(x[0]))  # 按照句子长度排序
-        batch_data = list()
+        sorted_IndexData = sorted(enumerate(data), key=lambda x: len(x[1][0]))  # 按照句子长度排序
+        sorted_data = [item[1] for item in sorted_IndexData]
+        sorted_index = [item[0] for item in sorted_IndexData]
+        batch_data, batch_index = list(), list()
         for i in range(num_batch):
             batch_data.append(self.pad_data(sorted_data[i * int(batch_size):(i + 1) * int(batch_size)]))
-        return batch_data
+            batch_index.append(sorted_index[i * int(batch_size):(i + 1) * int(batch_size)])
+        return batch_data, batch_index
 
     @staticmethod
     def pad_data(data):
@@ -109,16 +113,20 @@ class BatchManager(object):
         return [chars, bounds, flags, radicals, pinyins, targets]
 
     def iter_batch(self, shuffle=False):
+        combined = list(zip(self.batch_data, self.batch_index))
         if shuffle:
-            random.shuffle(self.batch_data)
+            random.shuffle(combined)
+            self.batch_data, self.batch_index = zip(*combined)
         for idx in range(self.len_data):
-            yield self.batch_data[idx]
+            yield self.batch_data[idx], self.batch_index[idx]
 
 
-def utilMain():
-    get_data_with_windows('train')
-    get_data_with_windows('test')
+def utilMain(onlypredict=False):
+    if not onlypredict:
+        get_data_with_windows('train')
+        get_data_with_windows('test')
     get_data_with_windows('predict')
+    pkls_to_txt(onlypredict)
     # train_data=BatchManager(10,'train')
     # train_data=BatchManager(10,'test')
 

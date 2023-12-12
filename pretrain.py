@@ -8,6 +8,7 @@
 import tensorflow as tf
 from transformers import BertTokenizer, TFBertForTokenClassification
 from data_utils import BatchManager, get_dict
+
 # import os
 # os.environ['NO_PROXY'] = 'huggingface.co'
 # os.environ['CURL_CA_BUNDLE'] = ''
@@ -19,6 +20,7 @@ batch_size = 20
 dict_file = 'data/prepare/dict.pkl'
 bert_model_name = 'bert-base-chinese'
 bert_model_name1 = "D:/desk/t/bert-base-chinese.tar.gz"
+
 
 def train():
     # 数据准备
@@ -35,26 +37,30 @@ def train():
     optimizer = tf.keras.optimizers.Adam(learning_rate=1e-5)
 
     for epoch in range(10):
-        for batch in train_manager.iter_batch(shuffle=True):
+        for batch, batch_index in train_manager.iter_batch(shuffle=True):
             # 处理输入数据并生成模型所需的输入
             input_texts = batch[0]  # input_texts应该是一个字符串列表
-            inputs = tokenizer(input_texts, return_tensors="tf", padding=True, truncation=True, is_split_into_words=True)
+            inputs = tokenizer(input_texts, return_tensors="tf", padding=True, truncation=True,
+                               is_split_into_words=True)
 
             with tf.GradientTape() as tape:
                 logits = model(inputs['input_ids'], training=True)[0]
-                loss = tf.reduce_mean(tf.keras.losses.sparse_categorical_crossentropy(batch[5], logits, from_logits=True))
+                loss = tf.reduce_mean(
+                    tf.keras.losses.sparse_categorical_crossentropy(batch[5], logits, from_logits=True))
 
             grads = tape.gradient(loss, model.trainable_variables)
             optimizer.apply_gradients(zip(grads, model.trainable_variables))
 
             print(f'Epoch {epoch + 1}, Loss: {loss.numpy()}')
 
-        for batch in test_manager.iter_batch(shuffle=True):
+        for batch, batch_index in test_manager.iter_batch(shuffle=True):
             input_texts = batch[0]
-            inputs = tokenizer(input_texts, return_tensors="tf", padding=True, truncation=True, is_split_into_words=True)
+            inputs = tokenizer(input_texts, return_tensors="tf", padding=True, truncation=True,
+                               is_split_into_words=True)
             logits = model(inputs['input_ids'], training=False)[0]
 
             # 处理模型的输出，进行标签预测等
+
 
 if __name__ == '__main__':
     train()

@@ -11,6 +11,8 @@ from data_utils import BatchManager, get_dict
 from model import Model
 import time
 import csv
+import os
+import shutil
 import logging  # 添加日志模块
 
 # 把日志保存到txt
@@ -39,39 +41,41 @@ def train():
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
-        for i in range(20):
+        for i in range(1):  # 设置epoch！！！！
             j = 0
-            for batch in train_manager.iter_batch(shuffle=True):
+            for batch, batch_index in train_manager.iter_batch(shuffle=True):
                 print_loss(model, sess, batch, True, train_manager, i, j)
                 j += 1
-            # if (i + 1) % 10 == 0:
-            evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, True)
-        rets, pres = evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, False)
+
+        rets = []
+        pres = []
+        for batch, batch_index in test_manager.iter_batch(shuffle=True):
+            print_loss(model, sess, batch, False, test_manager, i, ++j)
+            ret = model.predict(sess, batch, batch_index)
+            rets.append(ret)
+            print(ret)
+            j += 1
+
+        for k in range(3):
+            for batch, batch_index in predict_manager.iter_batch(shuffle=True):
+                print_loss(model, sess, batch, False, predict_manager, i, ++j)
+                ret = model.predict(sess, batch, batch_index)
+                if k == 0:
+                    pres.append(ret)
+                else:
+                    for i, r in enumerate(ret):
+                      pres[0][i].insert(-1, r[1])
+                print(ret)
+                j += 1
         rets10.append(rets)
         pres10.append(pres)
-        model.saver.save(sess, './model.ckpt')
-        # ------------------------写文件--------------------------
-        write_csv(result_file + "/test", rets10)
-        write_csv(result_file + "/predict", pres10)
 
-
-def evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, shuffle):
-    rets = []
-    pres = []
-    j = 0
-    for batch in test_manager.iter_batch(shuffle=shuffle):
-        print_loss(model, sess, batch, False, test_manager, i, ++j)
-        ret = model.predict(sess, batch)
-        rets.append(ret)
-        print(ret)
-        j += 1
-    for batch in predict_manager.iter_batch(shuffle=shuffle):
-        print_loss(model, sess, batch, False, predict_manager, i, ++j)
-        ret = model.predict(sess, batch)
-        pres.append(ret)
-        print(ret)
-        j += 1
-    return rets, pres
+    # ------------------------写文件--------------------------
+    if os.path.exists('data/prepare/results'):
+        shutil.rmtree('data/prepare/results')
+    os.makedirs('data/prepare/results')
+    write_csv(result_file + "/test", rets10)
+    write_csv(result_file + "/predict", pres10)
 
 
 def write_csv(filename, rets):

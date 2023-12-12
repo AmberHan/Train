@@ -7,8 +7,13 @@
 import tensorflow.compat.v1 as tf
 import numpy as np
 
+# 设置全局随机种子
+# tf.set_random_seed(17)
+
+
 # from tensorflow.contrib import rnn
 from tensorflow_addons.text.crf import crf_log_likelihood, viterbi_decode
+
 
 def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal_initializer()):
     # def network(inputs,shapes,num_tags,lstm_dim=100, initializer=tf.truncated_normal_initializer()):
@@ -110,7 +115,14 @@ def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal
 # 训练的部分不需要model来实现，model是为了从你的输入到输出，计算，损失，优化器
 class Model(object):
 
-    def __init__(self, dict, lr=0.0001):
+    def __init__(self, dict, lr=0.005):  # 设置学习率！！！！！
+        # lr=0.0001: epoch=10,f1=66; epoch=20,f1=70; epoch=30,f1=74.7
+        # lr=0.01: epoch=10, f1=90
+        # lr=0.005:epoch=30, f1=87.8######## epoch=25 f1=88.76 epoch=20 f1=89。8  epoch=15 f1=84。3
+        # lr=0.0025:epoch=10,f1=80.7
+        # lr=0.004:epoch=10, f1=84.7
+        # lr=0.0005:epoch=30, f1=81.5
+        # lr=0.0001:epoch=30, f1=80
         # --------------------------用到的参数值---------------------------
         self.num_char = len(dict['word'][0])
         self.num_bound = len(dict['bound'][0])
@@ -124,7 +136,7 @@ class Model(object):
         self.radical_dim = 50
         self.pinyin_dim = 50
         self.lstm_dim = 100
-        self.lr = lr  # 学习率
+        self.lr = lr  # 学习率！！！！！！！！！！
         self.map = dict
 
         # --------------------------定义接收数据的placeholder---------------------------
@@ -214,7 +226,6 @@ class Model(object):
             )
             return tf.reduce_mean(-log_likehood)
 
-
     def run_step(self, sess, batch, istrain=True):
         if istrain:  # 训练
             feed_dict = {
@@ -252,7 +263,7 @@ class Model(object):
             paths.append(path[1:])
         return paths
 
-    def predict(self, sess, batch):  # 完成预测
+    def predict(self, sess, batch, batch_index):  # 完成预测
         results = []
         matrix = self.trans.eval()  # 拿到转移矩阵
         logits, lengths = self.run_step(sess, batch, istrain=False)
@@ -264,7 +275,9 @@ class Model(object):
             string = [self.map['word'][0][index] for index in chars[i][:length]]
             real = [self.map['label'][0][index] for index in labels[i][:length]]
             tags = [self.map['label'][0][index] for index in paths[i]]
-            result = [k for k in zip(string, tags,real)]
+            index = [batch_index[i]] * len(paths[i])
+            result = [k for k in zip(string, tags, real, index)]
             result_as_list = [list(item) for item in result]
             results.extend(result_as_list)
-        return results
+        ret = sorted(results, key=lambda x: x[-1])
+        return [r[:-1] for r in ret]
