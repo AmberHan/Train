@@ -115,7 +115,7 @@ def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal
 # 训练的部分不需要model来实现，model是为了从你的输入到输出，计算，损失，优化器
 class Model(object):
 
-    def __init__(self, dict, lr=0.005):  # 设置学习率！！！！！
+    def __init__(self, dict, lr=0.0001):  # 设置学习率！！！！！
         # lr=0.0001: epoch=10,f1=66; epoch=20,f1=70; epoch=30,f1=74.7
         # lr=0.01: epoch=10, f1=90
         # lr=0.005:epoch=30, f1=87.8######## epoch=25 f1=88.76 epoch=20 f1=89。8  epoch=15 f1=84。3

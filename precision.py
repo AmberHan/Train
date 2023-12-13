@@ -24,7 +24,8 @@ def cal(labels):
     # 初始化FN和FP的计数器
     FN = 0  # 假负例
     FP = 0  # 假正例
-    TP = 0  # 正确的
+    TP = 0  # 真正例
+    TN = 0  # 真负例
 
     # 计算FN和FP
     for label in labels:
@@ -44,14 +45,18 @@ def cal(labels):
     # 计算F1分数
     f1 = 2 * (precision * recall) / (precision + recall)
 
+    # ACC，TN暂时为0
+    acc = (TP + TN) / (TP + FP + FN + TN)
+
     # 打印FN、FP、精确度、召回率和F1分数
-    print("拼音+词边界：")    # 词性+词边界+偏旁部首+拼音：
+    print("拼音+词边界：")  # 词性+词边界+偏旁部首+拼音：
     print("真正例（TP）:", TP)
     print("假负例（FN）:", FN)
     print("假正例（FP）:", FP)
     print("精确度:", precision)
     print("召回率:", recall)
     print("F1分数:", f1)
+    print("ACC:", acc)
 
 
 def write_csv(filename, ret):
