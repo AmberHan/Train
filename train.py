@@ -47,7 +47,7 @@ def train():
     init = tf.global_variables_initializer()
     with tf.Session() as sess:
         sess.run(init)
-        for i in range(2):  # 设置epoch！！！！
+        for i in range(20):  # 设置epoch！！！！
             j = 0
             for batch, batch_index in train_manager.iter_batch(shuffle=True):
                 print_loss(model, sess, batch, True, train_manager, i, j)
