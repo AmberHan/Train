@@ -10,9 +10,6 @@ import tensorflow.compat.v1 as tf
 from data_utils import BatchManager, get_dict
 from model import Model
 import time
-import csv
-import os
-import shutil
 import logging  # 添加日志模块
 import matplotlib.pyplot as plt
 from process_csv import *
