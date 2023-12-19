@@ -16,7 +16,8 @@ import shutil
 from random import shuffle
 import tensorflow as tf
 
-train_dir = 'train/20230810'
+train_dir = 'data/train/20230810'
+predict_dir = 'data/predict'
 
 # 设置随机种子
 tf.random.set_seed(17)
@@ -40,10 +41,10 @@ def process_text(idx, path, split_method=None):
 
     # -------------------------获取句子---------------------------
     if split_method is None:
-        with open(f'data/{train_dir}/{idx}.txt', 'r', encoding='utf-8') as f:
+        with open(f'{train_dir}/{idx}.txt', 'r', encoding='utf-8') as f:
             texts = f.readlines()
     else:
-        with open(f'data/{train_dir}/{idx}.txt', 'r', encoding='utf-8') as f:
+        with open(f'{train_dir}/{idx}.txt', 'r', encoding='utf-8') as f:
             texts = f.read()
             texts = split_method(texts)
     data['word'] = texts
@@ -52,7 +53,7 @@ def process_text(idx, path, split_method=None):
     tag_list = ['O' for s in texts for x in s]
     # 读取这个文件对应的ann文件
     if 'predict' not in idx:
-        tag = pd.read_csv(f'data/{train_dir}/{idx}.ann', header=None, sep='\t')
+        tag = pd.read_csv(f'{train_dir}/{idx}.ann', header=None, sep='\t')
         for i in range(tag.shape[0]):
             tag_item = tag.iloc[i][1].split(' ')  # 对获取对实体类别以及起始位置
             cls, start, end = tag_item[0], int(tag_item[1]), int(tag_item[-1])  # 转换成对应的类型
@@ -156,8 +157,8 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
             shutil.rmtree(pre_folder)
             os.makedirs(pre_folder)
         pre_idxs = list(
-            set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
-                 file.endswith('.txt') and file.startswith("predict")]))
+            set([file.split('.')[0] for file in os.listdir(predict_dir) if
+                 file.endswith('.txt')]))
         for idx in pre_idxs:
             result = pool.apply_async(process_text, args=(idx, split_method, 'predict'))
             results.append(result)
@@ -169,10 +170,10 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
             os.makedirs(test_folder)
             os.makedirs(pre_folder)
         idxs = list(
-            set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
+            set([file.split('.')[0] for file in os.listdir(train_dir) if
                  file.endswith('.txt') and not file.startswith("predict")]))  # 获取所有文件名字
         pre_idxs = list(
-            set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
+            set([file.split('.')[0] for file in os.listdir(train_dir) if
                  file.endswith('.txt') and file.startswith("predict")]))
         shuffle(idxs)  # 打乱顺序
         index = int(len(idxs) * train_radio)  # 拿到训练集的截止下标
@@ -257,7 +258,7 @@ def get_dict():
 def dataMain(onlypredict=False):
     # print(process_text('003', split_method=split_text,split_name='train'))
     #  multi_process()
-    # print(set([file.split('.')[0] for file in os.listdir('data/' + train_dir)]))
+    # print(set([file.split('.')[0] for file in os.listdir(train_dir)]))
     multi_process(split_text, onlypredict)
     if not onlypredict:
         get_dict()
