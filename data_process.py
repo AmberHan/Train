@@ -54,7 +54,7 @@ def split_text(text):
             continue
         if text[idx - 1].isdigit() and text[idx + 1].isspace() and text[idx + 2].isdigit():  # 前数字 后空格
             continue
-        if text[idx + 1] in set('.。;；,，'):  # 两个标点连着
+        if idx + 1 < len(text) and text[idx + 1] in set('.。;；,，'):  # 两个标点连着
             continue
         split_index.append(idx + 1)
     pattern2 = '第[一二三四五六七八九零十]出'  # 应在前面切
