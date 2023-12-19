@@ -71,6 +71,10 @@ def train():
             write_csv(result_file + "/predict", pres10)
             make_csvs()  # 处理生成的results下的csv; 1、去除双O生成check.scv； 2、根据check生成check_word.csv; (慎重，会覆盖check和check_word.csv)
             cal_csvs()  # 读取check_word.csv，计算三个公式
+
+            # 模型保存
+            model.saver.save(sess, './model.ckpt')
+
     # 绘制学习曲线
     plot_learning_curve(train_losses, test_losses)
 

@@ -31,7 +31,7 @@ def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal
     embedding = []
     keys = list(shapes.keys())
     for key in keys:
-        with tf.variable_scope(key + '_embedding'):
+        with tf.variable_scope(key + '_embedding', reuse=tf.AUTO_REUSE):
             lookup = tf.get_variable(
                 name=key + '_embedding',
                 shape=shapes[key],
@@ -46,7 +46,7 @@ def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal
     num_time = tf.shape(inputs[keys[0]])[1]
 
     # --------------------------循环神经网络编码---------------------------------
-    with tf.variable_scope('BiLstm_layer1'):  # 双层双向循环神经网络
+    with tf.variable_scope('BiLstm_layer1', reuse=tf.AUTO_REUSE):  # 双层双向循环神经网络
         lstm_cell = {}
         for name in ['forward', 'backward']:
             with tf.variable_scope(name):
@@ -62,7 +62,7 @@ def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal
         )
     output1 = tf.concat(outputs, axis=-1)  # b, L, 2*lstm_dim
 
-    with tf.variable_scope('BiLstm_layer2'):  # 双层双向循环神经网络
+    with tf.variable_scope('BiLstm_layer2', reuse=tf.AUTO_REUSE):  # 双层双向循环神经网络
         lstm_cell = {}
         for name in ['forward', 'backward']:
             with tf.variable_scope(name):
@@ -115,7 +115,7 @@ def network(inputs, shapes, num_tags, lstm_dim=100, initializer=tf.random_normal
 # 训练的部分不需要model来实现，model是为了从你的输入到输出，计算，损失，优化器
 class Model(object):
 
-    def __init__(self, dict, lr=0.0001):  # 设置学习率！！！！！
+    def __init__(self, dict, lr=0.0001, reuse=None):  # 设置学习率！！！！！
         # lr=0.0001: epoch=10,f1=66; epoch=20,f1=70; epoch=30,f1=74.7
         # lr=0.01: epoch=10, f1=90
         # lr=0.005:epoch=30, f1=87.8######## epoch=25 f1=88.76 epoch=20 f1=89。8  epoch=15 f1=84。3
@@ -205,7 +205,7 @@ class Model(object):
         with tf.variable_scope('crf_loss'):
             small = -1000.0
             start_logits = tf.concat(
-                [small * tf.ones(shape=[b, 1, self.num_tags]), tf.zeros(shape=[b, 1, 1])], axis=-1
+                [small * tf.ones(shape=[b, 1, self.num_tags], dtype=tf.float32), tf.zeros(shape=[b, 1, 1], dtype=tf.float32)], axis=-1
             )
             pad_logits = tf.cast(small * tf.ones([b, num_steps, 1]), tf.float32)
             logits = tf.concat([output, pad_logits], axis=-1)
