@@ -28,7 +28,7 @@ def is_Brackets(x):
     return False
 
 
-def process_text(idx, split_method=None, split_name='train'):
+def process_text(idx, path, split_method=None):
     """
     读取文本 切割 然后打上标记 并提取词边界、词性、偏旁部首、拼音等文本特征
     :param idx: 文件名字 不含扩展名
@@ -126,7 +126,7 @@ def process_text(idx, split_method=None, split_name='train'):
         dataset += records + [['sep'] * num_col]  # 每存完一个句子需要一行sep进行隔离
     dataset = dataset[:-1]  # 最后一行sep不要
     dataset = pd.DataFrame(dataset, columns=data.keys())  # 转化为dataframe
-    save_path = f'data/prepare/{split_name}/{idx}.csv'
+    save_path = f'{path}/{idx}.csv'
 
     def clean_word(w):
         if w == '\n':
@@ -142,6 +142,9 @@ def process_text(idx, split_method=None, split_name='train'):
 
 
 def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8来做训练
+    train_folder = 'data/prepare/train'
+    test_folder = 'data/prepare/test'
+    pre_folder = 'data/prepare/predict'
     import multiprocessing as mp
     num_cpus = mp.cpu_count()  # 获取机器cpu的个数
     my_use = num_cpus // 2
@@ -149,9 +152,9 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
     pool = mp.Pool(my_use)
     results = []
     if onlyPredict:
-        if os.path.exists('data/prepare/predict'):
-            shutil.rmtree('data/prepare/predict')
-            os.makedirs('data/prepare/predict')
+        if os.path.exists(pre_folder):
+            shutil.rmtree(pre_folder)
+            os.makedirs(pre_folder)
         pre_idxs = list(
             set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
                  file.endswith('.txt') and file.startswith("predict")]))
@@ -161,10 +164,10 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
     else:
         if os.path.exists('data/prepare/'):
             shutil.rmtree('data/prepare/')
-        if not os.path.exists('data/prepare/train/'):
-            os.makedirs('data/prepare/train')
-            os.makedirs('data/prepare/test')
-            os.makedirs('data/prepare/predict')
+        if not os.path.exists(train_folder):
+            os.makedirs(train_folder)
+            os.makedirs(test_folder)
+            os.makedirs(pre_folder)
         idxs = list(
             set([file.split('.')[0] for file in os.listdir('data/' + train_dir) if
                  file.endswith('.txt') and not file.startswith("predict")]))  # 获取所有文件名字
@@ -175,15 +178,19 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
         index = int(len(idxs) * train_radio)  # 拿到训练集的截止下标
         train_ids = idxs[:index]  # 训练集文件名集合
         test_ids = idxs[index:]  # 测试集文件名集合
-        for idx in train_ids:  #
-            result = pool.apply_async(process_text, args=(idx, split_method, 'train'))
+
+        for idx in train_ids:
+            result = pool.apply_async(process_text, args=(idx, train_folder, split_method))
             results.append(result)
-        for idx in test_ids:  #
-            result = pool.apply_async(process_text, args=(idx, split_method, 'test'))
+
+        for idx in test_ids:
+            result = pool.apply_async(process_text, args=(idx, test_folder, split_method))
             results.append(result)
+
         for idx in pre_idxs:
-            result = pool.apply_async(process_text, args=(idx, split_method, 'predict'))
+            result = pool.apply_async(process_text, args=(idx, pre_folder, split_method))
             results.append(result)
+
     pool.close()
     pool.join()
     [r.get() for r in results]
