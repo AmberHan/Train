@@ -47,54 +47,50 @@ def train(load=False):
             saver.restore(sess, "./model/model.ckpt")
         else:
             sess.run(init)
-            for i in range(20):  # 设置epoch！！！！
+            for i in range(3):  # 设置epoch！！！！
                 j = 0
                 for batch, batch_index in train_manager.iter_batch(shuffle=True):
                     print_loss(model, sess, batch, True, train_manager, i, j)
                     j += 1
+                # 计算测试的损失
+                train_loss = compute_loss(model, sess, train_manager)
+                test_loss = compute_loss(model, sess, test_manager)
+                train_losses.append(train_loss)
+                test_losses.append(test_loss)
+                # test 写文件
+                tests = evaluate_model_on_test_set(sess, model, test_manager, i, False)
+                rets10.append(tests)
+                if os.path.exists('data/prepare/results'):
+                    shutil.rmtree('data/prepare/results')
+                os.makedirs('data/prepare/results')
+                write_csv(result_file + "/test", rets10)
+                make_csvs()
+                cal_csvs()
+            # 绘制学习曲线 & 保存模型
             saver.save(sess, "./model/model.ckpt")
+            plot_learning_curve(train_losses, test_losses)
 
-        # 测试集 预测集
-        rets, pres = evaluate_model_on_test_set(sess, model, test_manager, predict_manager, 0, False)
-        rets10.append(rets)
+        # 测试集 预测集 写文件
+        pres = evaluate_model_on_test_set(sess, model, predict_manager, 0, False)
         pres10.append(pres)
-        # 计算测试的损失
-        train_loss = compute_loss(model, sess, train_manager)
-        test_loss = compute_loss(model, sess, test_manager)
-        train_losses.append(train_loss)
-        test_losses.append(test_loss)
-        # 写文件
         if os.path.exists('data/prepare/results'):
             shutil.rmtree('data/prepare/results')
         os.makedirs('data/prepare/results')
-        write_csv(result_file + "/test", rets10)
         write_csv(result_file + "/predict", pres10)
         make_csvs()  # 处理生成的results下的csv; 1、去除双O生成check.scv； 2、根据check生成check_word.csv; (慎重，会覆盖check和check_word.csv)
         cal_csvs()  # 读取check_word.csv，计算三个公式
 
-    # 绘制学习曲线
-    plot_learning_curve(train_losses, test_losses)
 
-
-def evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, shuffle):
+def evaluate_model_on_test_set(sess, model, manager, i, shuffle):
     rets = []
-    pres = []
     j = 0
-    for batch, batch_index in test_manager.iter_batch(shuffle):
-        print_loss(model, sess, batch, False, test_manager, i, ++j)
+    for batch, batch_index in manager.iter_batch(shuffle):
+        print_loss(model, sess, batch, False, manager, i, ++j)
         ret = model.predict(sess, batch, batch_index)
         rets.append(ret)
         print(ret)
         j += 1
-
-    j = 0
-    for batch, batch_index in predict_manager.iter_batch(shuffle):
-        print_loss(model, sess, batch, False, predict_manager, i, ++j)
-        ret = model.predict(sess, batch, batch_index)
-        pres.append(ret)
-        print(ret)
-        j += 1
-    return rets, pres
+    return rets
 
 
 def compute_loss(model, sess, manager):

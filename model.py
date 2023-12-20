@@ -168,8 +168,6 @@ class Model(object):
                               grad_vars]  # 按照值来截断导数（损失值），得到截断之后的梯度。限制导数，导数的绝对值过大会导致梯度爆炸
             self.train_op = opt.apply_gradients(clip_grad_vars, self.global_step)  # 使用截断后的梯度对参数进行更新
 
-        self.saver = tf.train.Saver(tf.global_variables(), max_to_keep=5)  # 模型保存器
-
     # 做预测的时候只要网络的输出值就可以，不需要计算损失
     def get_logits(self, char, bound, flag, radical, pinyin):
         """
@@ -205,7 +203,8 @@ class Model(object):
         with tf.variable_scope('crf_loss'):
             small = -1000.0
             start_logits = tf.concat(
-                [small * tf.ones(shape=[b, 1, self.num_tags], dtype=tf.float32), tf.zeros(shape=[b, 1, 1], dtype=tf.float32)], axis=-1
+                [small * tf.ones(shape=[b, 1, self.num_tags], dtype=tf.float32),
+                 tf.zeros(shape=[b, 1, 1], dtype=tf.float32)], axis=-1
             )
             pad_logits = tf.cast(small * tf.ones([b, num_steps, 1]), tf.float32)
             logits = tf.concat([output, pad_logits], axis=-1)
