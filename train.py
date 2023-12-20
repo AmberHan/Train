@@ -73,7 +73,7 @@ def train(load=False):
         cal_csvs()  # 读取check_word.csv，计算三个公式
 
     # 绘制学习曲线
-    # plot_learning_curve(train_losses, test_losses)
+    plot_learning_curve(train_losses, test_losses)
 
 
 def evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, shuffle):
