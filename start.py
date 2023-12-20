@@ -30,5 +30,3 @@ if __name__ == '__main__':
     dataMain()  # 根据txt,生成train、test和predict目录下的csv以及dict.pkl（重新运行会删除prepare目录）
     utilMain()  # 根据csv生成test,train,predict的pkl
     train()  # 根据四个pkl进行训练，预测得到results下的csv  (有四个的pkl后，可单独运行)
-    make_csvs()  # 处理生成的results下的csv; 1、去除双O生成check.scv； 2、根据check生成check_word.csv; (慎重，会覆盖check和check_word.csv)
-    cal_csvs()  # 读取check_word.csv，计算三个公式
