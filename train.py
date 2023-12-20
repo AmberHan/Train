@@ -24,7 +24,7 @@ dict_file = 'data/prepare/dict.pkl'
 result_file = 'data/prepare/results'
 
 
-def train():
+def train(load=False):
     # ------------------------数据准备--------------------------
     train_manager = BatchManager(batch_size=20)
     test_manager = BatchManager(batch_size=100, name='test')
@@ -40,40 +40,40 @@ def train():
     # 初始化绘制学习曲线用的列表
     train_losses = []
     test_losses = []
-
     init = tf.global_variables_initializer()
+    saver = tf.train.Saver()
     with tf.Session() as sess:
-        sess.run(init)
-        for i in range(20):  # 设置epoch！！！！
-            j = 0
-            for batch, batch_index in train_manager.iter_batch(shuffle=True):
-                print_loss(model, sess, batch, True, train_manager, i, j)
-                j += 1
-            # if (i + 1) % 10 == 0:
-            # evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, True)
-            rets, pres = evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, False)
-            rets10.append(rets)
-            pres10.append(pres)
-            # 计算并存储训练和测试的损失
-            train_loss = compute_loss(model, sess, train_manager)
-            test_loss = compute_loss(model, sess, test_manager)
-            train_losses.append(train_loss)
-            test_losses.append(test_loss)
-            # model.saver.save(sess, './model.ckpt')
-            # ------------------------写文件--------------------------
-            if os.path.exists('data/prepare/results'):
-                shutil.rmtree('data/prepare/results')
-            os.makedirs('data/prepare/results')
-            write_csv(result_file + "/test", rets10)
-            write_csv(result_file + "/predict", pres10)
-            make_csvs()  # 处理生成的results下的csv; 1、去除双O生成check.scv； 2、根据check生成check_word.csv; (慎重，会覆盖check和check_word.csv)
-            cal_csvs()  # 读取check_word.csv，计算三个公式
+        if load:
+            saver.restore(sess, "./model/model.ckpt")
+        else:
+            sess.run(init)
+            for i in range(20):  # 设置epoch！！！！
+                j = 0
+                for batch, batch_index in train_manager.iter_batch(shuffle=True):
+                    print_loss(model, sess, batch, True, train_manager, i, j)
+                    j += 1
+            saver.save(sess, "./model/model.ckpt")
 
-            # 模型保存
-            model.saver.save(sess, './model.ckpt')
+        # 测试集 预测集
+        rets, pres = evaluate_model_on_test_set(sess, model, test_manager, predict_manager, 0, False)
+        rets10.append(rets)
+        pres10.append(pres)
+        # 计算测试的损失
+        train_loss = compute_loss(model, sess, train_manager)
+        test_loss = compute_loss(model, sess, test_manager)
+        train_losses.append(train_loss)
+        test_losses.append(test_loss)
+        # 写文件
+        if os.path.exists('data/prepare/results'):
+            shutil.rmtree('data/prepare/results')
+        os.makedirs('data/prepare/results')
+        write_csv(result_file + "/test", rets10)
+        write_csv(result_file + "/predict", pres10)
+        make_csvs()  # 处理生成的results下的csv; 1、去除双O生成check.scv； 2、根据check生成check_word.csv; (慎重，会覆盖check和check_word.csv)
+        cal_csvs()  # 读取check_word.csv，计算三个公式
 
     # 绘制学习曲线
-    plot_learning_curve(train_losses, test_losses)
+    # plot_learning_curve(train_losses, test_losses)
 
 
 def evaluate_model_on_test_set(sess, model, test_manager, predict_manager, i, shuffle):
