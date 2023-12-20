@@ -114,8 +114,8 @@ def plot_learning_curve(train_losses, test_losses):
 
     # 设置 x 轴刻度为整数部分
     plt.xticks(range(1, len(train_losses) + 1))
-
-    plt.show()
+    # plt.show()
+    plt.savefig("./pict.png")
 
 
 def write_csv(filename, rets):
