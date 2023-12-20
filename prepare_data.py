@@ -29,7 +29,7 @@ def is_Brackets(x):
     return False
 
 
-def process_text(idx, path, split_method=None):
+def process_text(idx, path, dir, split_method=None):
     """
     读取文本 切割 然后打上标记 并提取词边界、词性、偏旁部首、拼音等文本特征
     :param idx: 文件名字 不含扩展名
@@ -41,10 +41,10 @@ def process_text(idx, path, split_method=None):
 
     # -------------------------获取句子---------------------------
     if split_method is None:
-        with open(f'{train_dir}/{idx}.txt', 'r', encoding='utf-8') as f:
+        with open(f'{dir}/{idx}.txt', 'r', encoding='utf-8') as f:
             texts = f.readlines()
     else:
-        with open(f'{train_dir}/{idx}.txt', 'r', encoding='utf-8') as f:
+        with open(f'{dir}/{idx}.txt', 'r', encoding='utf-8') as f:
             texts = f.read()
             texts = split_method(texts)
     data['word'] = texts
@@ -52,8 +52,8 @@ def process_text(idx, path, split_method=None):
     # -------------------------获取标签----------------------------
     tag_list = ['O' for s in texts for x in s]
     # 读取这个文件对应的ann文件
-    if 'predict' not in idx:
-        tag = pd.read_csv(f'{train_dir}/{idx}.ann', header=None, sep='\t')
+    if dir != predict_dir:
+        tag = pd.read_csv(f'{dir}/{idx}.ann', header=None, sep='\t')
         for i in range(tag.shape[0]):
             tag_item = tag.iloc[i][1].split(' ')  # 对获取对实体类别以及起始位置
             cls, start, end = tag_item[0], int(tag_item[1]), int(tag_item[-1])  # 转换成对应的类型
@@ -160,7 +160,7 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
             set([file.split('.')[0] for file in os.listdir(predict_dir) if
                  file.endswith('.txt')]))
         for idx in pre_idxs:
-            result = pool.apply_async(process_text, args=(idx, split_method, 'predict'))
+            result = pool.apply_async(process_text, args=(idx, pre_folder, predict_dir, split_method))
             results.append(result)
     else:
         if os.path.exists('data/prepare/'):
@@ -171,25 +171,25 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
             os.makedirs(pre_folder)
         idxs = list(
             set([file.split('.')[0] for file in os.listdir(train_dir) if
-                 file.endswith('.txt') and not file.startswith("predict")]))  # 获取所有文件名字
+                 file.endswith('.txt')]))  # 获取所有文件名字
         pre_idxs = list(
-            set([file.split('.')[0] for file in os.listdir(train_dir) if
-                 file.endswith('.txt') and file.startswith("predict")]))
+            set([file.split('.')[0] for file in os.listdir(predict_dir) if
+                 file.endswith('.txt')]))
         shuffle(idxs)  # 打乱顺序
         index = int(len(idxs) * train_radio)  # 拿到训练集的截止下标
         train_ids = idxs[:index]  # 训练集文件名集合
         test_ids = idxs[index:]  # 测试集文件名集合
 
         for idx in train_ids:
-            result = pool.apply_async(process_text, args=(idx, train_folder, split_method))
+            result = pool.apply_async(process_text, args=(idx, train_folder, train_dir, split_method))
             results.append(result)
 
         for idx in test_ids:
-            result = pool.apply_async(process_text, args=(idx, test_folder, split_method))
+            result = pool.apply_async(process_text, args=(idx, test_folder, train_dir, split_method))
             results.append(result)
 
         for idx in pre_idxs:
-            result = pool.apply_async(process_text, args=(idx, pre_folder, split_method))
+            result = pool.apply_async(process_text, args=(idx, pre_folder, predict_dir, split_method))
             results.append(result)
 
     pool.close()
