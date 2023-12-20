@@ -49,20 +49,20 @@ def get_data_with_windows(name='train'):
         # ---------------------------------数据增强-------------------------------
         # 拼接的目的： 不拼、拼两个、拼三个可以增加学习长短句子的能力，即数据增强
         results.extend(result)
-        if name == 'train':
-            two = []
-            for i in range(len(result) - 1):
-                first = result[i]
-                second = result[i + 1]
-                two.append([first[k] + second[k] for k in range(len(first))])
+        # if name == 'train':
+        two = []
+        for i in range(len(result) - 1):
+            first = result[i]
+            second = result[i + 1]
+            two.append([first[k] + second[k] for k in range(len(first))])
 
-            three = []
-            for i in range(len(result) - 2):
-                first = result[i]
-                second = result[i + 1]
-                third = result[i + 2]
-                three.append([first[k] + second[k] + third[k] for k in range(len(first))])
-            results.extend(two + three)
+        three = []
+        for i in range(len(result) - 2):
+            first = result[i]
+            second = result[i + 1]
+            third = result[i + 2]
+            three.append([first[k] + second[k] + third[k] for k in range(len(first))])
+        results.extend(two + three)
 
     with open(f'data/prepare/' + name + '.pkl', 'wb') as f:
         pickle.dump(results, f)
