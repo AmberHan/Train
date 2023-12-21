@@ -48,12 +48,12 @@ def train(load=False):
             saver.restore(sess, "./model/model.ckpt")
             # 测试集 预测集 写文件
             delete_files_with_prefix("data/prepare/results", "predict")
-            pres = evaluate_model_on_test_set(sess, model, predict_manager, 0, False)
+            pres = evaluate_model_on_test_set(sess, model, predict_manager, 0, False, False)
             pres10.append(pres)
             write_csv(result_file + "/predict", pres10)
         else:
             sess.run(init)
-            for i in range(20):  # 设置epoch！！！！
+            for i in range(10):  # 设置epoch！！！！
                 j = 0
                 for batch, batch_index in train_manager.iter_batch(shuffle=True):
                     print_loss(model, sess, batch, True, train_manager, i, j)
@@ -64,7 +64,7 @@ def train(load=False):
                 train_losses.append(train_loss)
                 test_losses.append(test_loss)
                 # test 写文件
-                tests = evaluate_model_on_test_set(sess, model, test_manager, i, False)
+                tests = evaluate_model_on_test_set(sess, model, test_manager, i, False, False)
                 rets10.append(tests)
                 delete_files_with_prefix("data/prepare/results", "test")
                 write_csv(result_file + "/test", rets10)
@@ -75,11 +75,12 @@ def train(load=False):
             plot_learning_curve(train_losses, test_losses)
 
 
-def evaluate_model_on_test_set(sess, model, manager, i, shuffle):
+def evaluate_model_on_test_set(sess, model, manager, i, shuffle, isLoss):
     rets = []
     j = 0
     for batch, batch_index in manager.iter_batch(shuffle):
-        print_loss(model, sess, batch, False, manager, i, ++j)
+        if isLoss:
+            print_loss(model, sess, batch, False, manager, i, ++j)
         ret = model.predict(sess, batch, batch_index)
         rets.append(ret)
         # print(ret)
