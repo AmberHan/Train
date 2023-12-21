@@ -146,6 +146,7 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
     train_folder = 'data/prepare/train'
     test_folder = 'data/prepare/test'
     pre_folder = 'data/prepare/predict'
+    result_folder = 'data/prepare/result'
     import multiprocessing as mp
     num_cpus = mp.cpu_count()  # 获取机器cpu的个数
     my_use = num_cpus // 2
@@ -165,10 +166,9 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
     else:
         if os.path.exists('data/prepare/'):
             shutil.rmtree('data/prepare/')
-        if not os.path.exists(train_folder):
-            os.makedirs(train_folder)
-            os.makedirs(test_folder)
-            # os.makedirs(pre_folder)
+        os.makedirs(train_folder)
+        os.makedirs(test_folder)
+        os.makedirs(result_folder)
         idxs = list(
             set([file.split('.')[0] for file in os.listdir(train_dir) if
                  file.endswith('.txt')]))  # 获取所有文件名字
