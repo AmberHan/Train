@@ -37,8 +37,8 @@ def train(load=False):
     rets10 = []
     pres10 = []
     # 初始化绘制学习曲线用的列表
-    train_losses = []
-    test_losses = []
+    # train_losses = []
+    # test_losses = []
     init = tf.global_variables_initializer()
     saver = tf.train.Saver()
     with tf.Session() as sess:
