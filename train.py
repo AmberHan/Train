@@ -58,11 +58,11 @@ def train(load=False):
                 for batch, batch_index in train_manager.iter_batch(shuffle=True):
                     print_loss(model, sess, batch, True, train_manager, i, j)
                     j += 1
-                # 计算测试的损失
-                train_loss = compute_loss(model, sess, train_manager)
-                test_loss = compute_loss(model, sess, test_manager)
-                train_losses.append(train_loss)
-                test_losses.append(test_loss)
+                # # 计算测试的损失
+                # train_loss = compute_loss(model, sess, train_manager)
+                # test_loss = compute_loss(model, sess, test_manager)
+                # train_losses.append(train_loss)
+                # test_losses.append(test_loss)
                 # test 写文件
                 tests = evaluate_model_on_test_set(sess, model, test_manager, i, False, False)
                 rets10.append(tests)
@@ -72,7 +72,7 @@ def train(load=False):
                 cal_csvs()
             # 绘制学习曲线 & 保存模型
             saver.save(sess, "./model/model.ckpt")
-            plot_learning_curve(train_losses, test_losses)
+            # plot_learning_curve(train_losses, test_losses)
 
 
 def evaluate_model_on_test_set(sess, model, manager, i, shuffle, isLoss):
