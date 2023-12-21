@@ -3,3 +3,4 @@ __pycache__
 data/prepare
 data/training_log.txt
 model
+pict.png

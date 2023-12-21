@@ -1,8 +1,6 @@
 from prepare_data import *
 from data_utils import *
 from train import *
-from process_csv import *
-from precision import *
 # 一：运行步骤：
 # 首先运行start.py(处理predict、train文本)；
 # 然后新增或修改data/train/20230810/predict1.txt，predict2.txt...;
@@ -27,6 +25,6 @@ from precision import *
 
 
 if __name__ == '__main__':
-    dataMain()  # 根据txt,生成train、test和predict目录下的csv以及dict.pkl（重新运行会删除prepare目录）
-    utilMain()  # 根据csv生成test,train,predict的pkl
-    train()  # 根据四个pkl进行训练，预测得到results下的csv  (有四个的pkl后，可单独运行)
+    dataMain(False)  # 根据txt,生成train、test和predict目录下的csv以及dict.pkl（重新运行会删除prepare目录）
+    utilMain(False)  # 根据csv生成test,train,predict的pkl
+    train(False)  # 根据四个pkl进行训练，预测得到results下的csv  (有四个的pkl后，可单独运行)
