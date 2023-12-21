@@ -17,7 +17,8 @@ def pkls_to_txt(onlypredict=False):
         pkl_to_txt("test")
         pkl_to_txt("train")
         pkl_to_txt("dict")
-    pkl_to_txt("predict")
+    else:
+        pkl_to_txt("predict")
 
 
 # 打印的是最终的结果

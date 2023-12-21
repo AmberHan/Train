@@ -125,7 +125,8 @@ def utilMain(onlypredict=False):
     if not onlypredict:
         get_data_with_windows('train')
         get_data_with_windows('test')
-    get_data_with_windows('predict')
+    else:
+        get_data_with_windows('predict')
     pkls_to_txt(onlypredict)
     # train_data=BatchManager(10,'train')
     # train_data=BatchManager(10,'test')

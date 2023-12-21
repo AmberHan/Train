@@ -155,7 +155,7 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
     if onlyPredict:
         if os.path.exists(pre_folder):
             shutil.rmtree(pre_folder)
-            os.makedirs(pre_folder)
+        os.makedirs(pre_folder)
         pre_idxs = list(
             set([file.split('.')[0] for file in os.listdir(predict_dir) if
                  file.endswith('.txt')]))
@@ -168,13 +168,13 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
         if not os.path.exists(train_folder):
             os.makedirs(train_folder)
             os.makedirs(test_folder)
-            os.makedirs(pre_folder)
+            # os.makedirs(pre_folder)
         idxs = list(
             set([file.split('.')[0] for file in os.listdir(train_dir) if
                  file.endswith('.txt')]))  # 获取所有文件名字
-        pre_idxs = list(
-            set([file.split('.')[0] for file in os.listdir(predict_dir) if
-                 file.endswith('.txt')]))
+        # pre_idxs = list(
+        #     set([file.split('.')[0] for file in os.listdir(predict_dir) if
+        #          file.endswith('.txt')]))
         shuffle(idxs)  # 打乱顺序
         index = int(len(idxs) * train_radio)  # 拿到训练集的截止下标
         train_ids = idxs[:index]  # 训练集文件名集合
@@ -188,9 +188,9 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
             result = pool.apply_async(process_text, args=(idx, test_folder, train_dir, split_method))
             results.append(result)
 
-        for idx in pre_idxs:
-            result = pool.apply_async(process_text, args=(idx, pre_folder, predict_dir, split_method))
-            results.append(result)
+        # for idx in pre_idxs:
+        #     result = pool.apply_async(process_text, args=(idx, pre_folder, predict_dir, split_method))
+        #     results.append(result)
 
     pool.close()
     pool.join()
