@@ -25,10 +25,6 @@ result_file = 'data/prepare/results'
 
 
 def train(load=False):
-    # ------------------------train test数据准备--------------------------
-    train_manager = BatchManager(batch_size=20)
-    test_manager = BatchManager(batch_size=100, name='test')
-
     # ------------------------读取字典--------------------------
     mapping_dict = get_dict(dict_file)
 
@@ -48,12 +44,17 @@ def train(load=False):
             saver.restore(sess, "./model/model.ckpt")
             # 测试集 预测集 写文件
             delete_files_with_prefix("data/prepare/results", "predict")
+            delete_files_with_prefix("data/prepare/final", "check_predict")
             pres = evaluate_model_on_test_set(sess, model, predict_manager, 0, False, False)
             pres10.append(pres)
             write_csv(result_file + "/predict", pres10)
+            make_csv("predict")
         else:
+            # ------------------------train test数据准备--------------------------
+            train_manager = BatchManager(batch_size=20)
+            test_manager = BatchManager(batch_size=100, name='test')
             sess.run(init)
-            for i in range(10):  # 设置epoch！！！！
+            for i in range(3):  # 设置epoch！！！！
                 j = 0
                 for batch, batch_index in train_manager.iter_batch(shuffle=True):
                     print_loss(model, sess, batch, True, train_manager, i, j)
@@ -67,8 +68,9 @@ def train(load=False):
                 tests = evaluate_model_on_test_set(sess, model, test_manager, i, False, False)
                 rets10.append(tests)
                 delete_files_with_prefix("data/prepare/results", "test")
+                delete_files_with_prefix("data/prepare/final", "check_test")
                 write_csv(result_file + "/test", rets10)
-                make_csvs()
+                make_csv("test")
                 cal_csvs()
             # 绘制学习曲线 & 保存模型
             saver.save(sess, "./model/model.ckpt")
@@ -82,10 +84,11 @@ def evaluate_model_on_test_set(sess, model, manager, i, shuffle, isLoss):
         if isLoss:
             print_loss(model, sess, batch, False, manager, i, ++j)
         ret = model.predict(sess, batch, batch_index)
-        rets.append(ret)
+        rets.extend(ret)
         # print(ret)
         j += 1
-    return rets
+    ret = sorted(rets, key=lambda x: x[-1])
+    return [r[:-1] for r in ret]
 
 
 def delete_files_with_prefix(directory, prefix):
@@ -128,8 +131,7 @@ def write_csv(filename, rets):
         with open(filename + str(index) + ".csv", 'w', newline='', encoding="utf_8_sig") as csvfile:
             csvwriter = csv.writer(csvfile)
             for rows in ret:
-                for row in rows:
-                    csvwriter.writerow(row)
+                csvwriter.writerow(rows)
 
 
 def print_loss(model, sess, batch, istrain, manager, i, j):

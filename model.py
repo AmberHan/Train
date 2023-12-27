@@ -258,7 +258,6 @@ class Model(object):
             logits = np.concatenate([score, pad], axis=-1)
             logits = np.concatenate([start, logits], axis=0)
             path, _ = viterbi_decode(logits, matrix)
-
             paths.append(path[1:])
         return paths
 
@@ -278,5 +277,4 @@ class Model(object):
             result = [k for k in zip(string, tags, real, index)]
             result_as_list = [list(item) for item in result]
             results.extend(result_as_list)
-        ret = sorted(results, key=lambda x: x[-1])
-        return [r[:-1] for r in ret]
+        return results

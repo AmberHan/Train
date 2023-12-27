@@ -34,8 +34,8 @@ def get_data_with_windows(name='train'):
         path = os.path.join(root, file)
         samples = pd.read_csv(path, sep=',')
         num_samples = len(samples)
-        sep_index = [-1] + samples[samples['word'] == 'sep'].index.tolist() + [
-            num_samples]  # 结果应为如：-1 20 40 50,-1是因为多个sep
+        # 结果应为如：-1 20 40 50,-1是因为多个sep
+        sep_index = [-1] + samples[samples['word'] == 'sep'].index.tolist() + [num_samples]
 
         # ---------------------------------获取句子并将句子全部都转换成id-------------------------------
         for i in range(len(sep_index) - 1):  # 遍历每一个下标

@@ -75,7 +75,7 @@ def cal_csv(type):
     # 对文件进行排序
     csv_files.sort()  # reverse=True
     for i, file in enumerate(csv_files):
-        print("第" + str(i+1) + "轮*" + "*" * 100)
+        print("第" + str(i) + "轮*" + "*" * 100)
         data = read_csv(file)
         cal(data)
         print("*" * 100)
