@@ -43,7 +43,6 @@ T43	Color 474 475	银
 T44	Nature 482 483	凤
 T45	Color 492 493	金
 T46	Color 509 510	银
-T47	Color 530 531	乌
 T48	Nature 524 526	南枝
 T49	Color 537 538	丹
 T50	Nature 559 560	鸾
@@ -53,7 +52,7 @@ T53	Color 591 592	银
 T54	Color 596 597	金
 T55	Color 599 600	银
 T56	Color 608 609	金
-T57	Color 644 645	丹
+T57	Color 644 646	丹青
 T58	Nature 652 653	松
 T59	Nature 663 665	桃花
 T60	Nature 694 696	梧叶
@@ -63,7 +62,7 @@ T63	Nature 717 718	柳
 T64	Nature 732 734	猩唇
 T65	Nature 736 738	豹胎
 T66	Color 743 746	紫罗兰
-T67	Color 750 751	白
+T67	Color 750 752	白玉
 T68	Color 765 768	紫罗兰
 T69	Nature 775 777	春花
 T70	Color 785 786	白
@@ -81,6 +80,9 @@ T80	Nature 344 345	猿
 T81	Nature 310 311	杨
 T82	Nature 351 352	虎
 T83	Nature 463 464	桂
-T84	Nature 531 532	鹊
+T84	Nature 530 532	乌鹊
 T85	Nature 538 539	桂
-T86	Color 645 646	青
+T87	Nature 106 107	茶
+T88	Color 454 455	玉
+T89	Color 487 488	玉
+T90	Nature 488 489	兔

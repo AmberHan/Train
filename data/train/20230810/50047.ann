@@ -21,7 +21,7 @@ T20	Color 152 153	金
 T21	Nature 177 179	米粟
 T22	Color 184 185	金
 T23	Color 191 192	金
-T24	Color 198 199	金
+T24	Color 198 200	金银
 T25	Nature 209 211	肥鹅
 T26	Nature 216 218	肥鹅
 T27	Nature 219 221	鹅毛
@@ -62,7 +62,7 @@ T63	Color 528 529	紫
 T64	Color 536 537	靑
 T66	Color 579 580	白
 T67	Nature 584 585	草
-T68	Color 587 588	黄
+T68	Color 587 589	黄金
 T69	Nature 618 619	鸡
 T72	Nature 656 657	草
 T73	Color 659 661	白的
@@ -78,10 +78,13 @@ T82	Nature 696 698	彪虎
 T83	Nature 707 708	马
 T84	Nature 65 66	象
 T85	Nature 101 102	莲
-T86	Color 199 200	银
 T87	Nature 257 258	鸾
 T88	Nature 354 355	鸾
 T51	Nature 437 438	狗
 T89	Nature 439 440	蝇
-T65	Color 588 589	金
 T41	Color 349 350	金
+T70	Nature 471 473	梅花
+T71	Color 507 509	雪色
+T86	Color 571 572	丹
+T65	Color 624 625	丹
+T90	Color 650 651	丹

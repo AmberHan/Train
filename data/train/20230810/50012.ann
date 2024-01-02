@@ -27,7 +27,7 @@ T26	Nature 222 224	锦鳞
 T27	Color 233 234	绿
 T28	Nature 250 252	烟柳
 T29	Color 253 254	朱
-T30	Color 263 264	红
+T30	Color 263 265	红粉
 T31	Color 267 268	紫
 T32	Nature 270 271	凤
 T33	Nature 295 297	垂杨
@@ -41,8 +41,8 @@ T40	Nature 347 348	酒
 T41	Nature 365 366	马
 T42	Nature 370 372	桃李
 T43	Nature 385 387	槐花
-T44	Color 387 389	正黄
-T45	Color 403 405	玄黄
+T44	Color 388 389	黄
+T45	Color 404 405	黄
 T46	Color 407 408	金
 T47	Color 413 414	黑
 T48	Color 442 443	黄
@@ -85,7 +85,7 @@ T84	Nature 705 706	鸾
 T85	Color 708 709	绿
 T86	Nature 715 717	芳杜
 T87	Nature 718 720	芳草
-T88	Nature 732 734	莲步
+T88	Nature 732 733	莲
 T89	Color 738 739	青
 T90	Color 745 746	黄
 T91	Color 752 753	红
@@ -103,9 +103,9 @@ T102	Nature 870 871	竹
 T103	Nature 875 876	花
 T106	Nature 886 888	豹头
 T107	Nature 888 890	虎额
-T104	Nature 879 881	凤臆
-T105	Nature 881 883	龙鬵
-T108	Color 894 896	翠蹄
+T104	Nature 879 880	凤
+T105	Nature 881 882	龙
+T108	Color 894 895	翠
 T109	Color 902 904	赤汗
 T110	Color 909 911	青荧
 T111	Color 936 938	布汗
@@ -144,7 +144,7 @@ T143	Nature 1129 1130	犀
 T144	Nature 1137 1139	龙凤
 T145	Nature 1152 1154	葡萄
 T146	Color 1142 1144	银海
-T147	Color 1162 1164	金谷
+T147	Color 1162 1163	金
 T148	Nature 1170 1172	琼林
 T149	Color 1189 1190	绿
 T150	Nature 1195 1196	蟾
@@ -205,3 +205,10 @@ T204	Nature 490 492	驼峰
 T205	Nature 614 615	苔
 T206	Nature 1507 1508	凤
 T207	Nature 1514 1515	莲
+T208	Nature 230 231	龙
+T209	Color 897 898	玉
+T210	Nature 895 896	蹄
+T211	Nature 1012 1013	花
+T212	Color 1081 1082	玉
+T213	Color 1117 1118	玉
+T214	Color 1154 1155	玉

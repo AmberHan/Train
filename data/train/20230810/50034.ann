@@ -43,7 +43,6 @@ T42	Nature 419 421	芦花
 T43	Color 423 424	白
 T44	Color 428 429	金
 T45	Color 439 440	素
-T46	Color 445 446	素
 T47	Nature 455 458	同林鸟
 T48	Nature 472 473	鸾
 T49	Nature 492 494	浮鸥
@@ -112,3 +111,6 @@ T111	Nature 1055 1057	鼠雀
 T112	Nature 1063 1064	马
 T113	Nature 726 727	兔
 T114	Color 985 986	赤
+T115	Nature 66 68	兰麝
+T116	Color 386 387	绿
+T46	Color 445 446	素

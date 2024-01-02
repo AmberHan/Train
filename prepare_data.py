@@ -169,9 +169,8 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
         os.makedirs(train_folder)
         os.makedirs(test_folder)
         os.makedirs(result_folder)
-        idxs = list(
-            set([file.split('.')[0] for file in os.listdir(train_dir) if
-                 file.endswith('.txt')]))  # 获取所有文件名字
+        idxs = list(set([file.split('.')[0] for file in os.listdir(train_dir)
+                         if file.endswith('.txt')]))  # 获取所有文件名字
         # pre_idxs = list(
         #     set([file.split('.')[0] for file in os.listdir(predict_dir) if
         #          file.endswith('.txt')]))
@@ -188,9 +187,18 @@ def multi_process(split_method=None, onlyPredict=False, train_radio=0.8):  # 0.8
             result = pool.apply_async(process_text, args=(idx, test_folder, train_dir, split_method))
             results.append(result)
 
-        # for idx in pre_idxs:
-        #     result = pool.apply_async(process_text, args=(idx, pre_folder, predict_dir, split_method))
-        #     results.append(result)
+        # 新建train和test目录，对该目录进行训练
+        tr_idxs = list(set([file.split('.')[0] for file in os.listdir(train_dir + "/train")
+                           if file.endswith('.txt')]))
+        te_idxs = list(set([file.split('.')[0] for file in os.listdir(train_dir+"/test")
+                         if file.endswith('.txt')]))
+        for idx in tr_idxs:
+            result = pool.apply_async(process_text, args=(idx, train_folder, train_dir+"/train", split_method))
+            results.append(result)
+
+        for idx in te_idxs:
+            result = pool.apply_async(process_text, args=(idx, test_folder, train_dir + "/test", split_method))
+            results.append(result)
 
     pool.close()
     pool.join()

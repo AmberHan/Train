@@ -84,7 +84,6 @@ T83	Nature 794 795	鱼
 T84	Nature 799 800	雁
 T85	Nature 810 811	鹭
 T86	Nature 812 813	鸳
-T87	Color 819 820	乌
 T88	Color 828 829	金
 T89	Color 833 834	紫
 T90	Nature 868 869	鸡
@@ -109,7 +108,6 @@ T108	Color 1036 1037	翠
 T109	Color 1049 1050	金
 T110	Nature 1061 1062	鸦
 T111	Nature 1065 1066	鸾
-T112	Color 1069 1070	乌
 T113	Nature 1073 1074	鹤
 T114	Color 1081 1082	雪
 T115	Color 1094 1095	青
@@ -118,4 +116,10 @@ T117	Nature 1120 1122	米穀
 T118	Nature 306 307	竹
 T119	Nature 313 314	竹
 T120	Nature 695 696	鸳
-T121	Nature 1070 1071	鸟
+T121	Nature 1069 1071	乌鸟
+T122	Nature 69 70	米
+T123	Color 190 191	黄
+T124	Color 603 605	寒玉
+T125	Nature 781 783	烟树
+T87	Nature 818 820	慈乌
+T126	Nature 1038 1040	兰麝

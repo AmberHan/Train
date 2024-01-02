@@ -33,12 +33,12 @@ T32	Nature 215 216	鸡
 T33	Color 222 223	金
 T34	Nature 234 236	龙鳞
 T35	Color 243 244	黄
-T36	Color 250 251	黄
+T36	Color 249 251	赭黄
 T37	Color 284 285	白
 T38	Nature 262 264	草茅
 T39	Color 299 301	朱紫
 T40	Color 311 312	黄
-T41	Color 320 321	乌
+T41	Color 320 322	乌鸟
 T42	Color 323 324	黄
 T43	Color 346 347	丹
 T44	Color 359 360	丹
@@ -145,3 +145,8 @@ T144	Nature 770 771	花
 T145	Nature 914 915	凤
 T146	Nature 1089 1090	凤
 T147	Nature 1207 1208	柏
+T148	Color 76 77	铜
+T149	Color 162 163	玉
+T150	Color 164 165	玉
+T151	Nature 198 200	獬豸
+T152	Color 837 838	玉

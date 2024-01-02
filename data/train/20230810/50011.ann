@@ -8,7 +8,6 @@ T7	Nature 102 104	鱼龙
 T8	Color 109 110	金
 T9	Color 118 119	彩
 T10	Color 125 126	青
-T11	Nature 135 136	菽
 T13	Nature 149 151	桃李
 T14	Nature 157 159	蘯蘩
 T15	Nature 163 164	花
@@ -20,7 +19,6 @@ T20	Nature 216 218	椿萱
 T21	Nature 224 226	花柳
 T22	Nature 229 230	花
 T23	Nature 246 247	鸾
-T24	Nature 251 252	燕
 T25	Nature 264 266	蘯蘩
 T26	Color 279 280	白
 T27	Color 284 285	红
@@ -33,7 +31,7 @@ T33	Nature 322 324	桑榆
 T34	Nature 327 329	歎兰
 T35	Nature 335 337	桂花
 T36	Nature 352 353	枝
-T37	Color 375 376	乌
+T37	Nature 375 376	乌
 T38	Nature 377 378	兔
 T39	Color 383 384	白
 T40	Color 385 386	绿
@@ -79,7 +77,7 @@ T79	Nature 741 743	语燕
 T80	Nature 746 748	浪蝶
 T81	Nature 748 750	狂蜂
 T82	Color 756 759	并头红
-T83	Color 764 766	彩绳
+T83	Color 764 765	彩
 T84	Nature 773 775	牆花
 T85	Color 789 790	红
 T86	Color 791 792	绿
@@ -170,3 +168,4 @@ T170	Nature 882 883	鹂
 T93	Nature 889 890	花
 T171	Nature 891 892	柳
 T172	Nature 1289 1290	桂
+T173	Color 107 108	玉

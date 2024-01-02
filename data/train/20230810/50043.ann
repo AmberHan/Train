@@ -8,7 +8,6 @@ T7	Nature 75 76	凤
 T8	Color 82 83	彩
 T9	Nature 87 89	暴虎
 T10	Color 93 94	绿
-T11	Nature 131 132	燕
 T12	Nature 137 139	桃杏
 T13	Nature 142 144	棠棣
 T14	Nature 148 149	桂
@@ -22,7 +21,6 @@ T22	Color 188 189	白
 T23	Nature 199 200	树
 T24	Nature 207 209	流萍
 T26	Nature 221 222	楡
-T25	Nature 215 217	鹤发
 T27	Color 229 230	金
 T28	Nature 235 236	鹏
 T29	Nature 238 240	雁鸿
@@ -32,7 +30,7 @@ T32	Nature 263 265	雨萍
 T33	Nature 268 270	旅雁
 T34	Color 280 281	白
 T35	Nature 284 286	鳞鸿
-T36	Nature 293 295	马革
+T36	Nature 293 294	马
 T37	Nature 301 303	鸿雁
 T38	Nature 334 335	鸾
 T39	Nature 340 342	菱花
@@ -46,7 +44,6 @@ T46	Nature 462 463	叶
 T47	Color 467 468	翠
 T48	Color 489 490	翠
 T49	Nature 494 496	蔬菜
-T50	Color 512 513	乌
 T51	Nature 500 502	野禽
 T52	Nature 526 527	蔬
 T53	Nature 524 525	菜
@@ -95,3 +92,10 @@ T95	Nature 847 849	鸿雁
 T18	Nature 189 190	草
 T96	Color 666 667	霜
 T97	Nature 766 767	鹰
+T98	Color 793 794	金
+T50	Nature 511 513	慈乌
+T11	Color 167 168	丹
+T25	Nature 215 216	鹤
+T99	Color 416 417	玉
+T100	Color 800 801	赤
+T101	Color 804 805	靑

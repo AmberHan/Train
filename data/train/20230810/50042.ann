@@ -5,7 +5,6 @@ T4	Color 38 39	靑
 T5	Nature 48 49	花
 T6	Nature 57 59	蝴蝶
 T7	Nature 65 67	杜鹃
-T8	Color 78 79	金
 T9	Nature 91 93	萝卜
 T10	Nature 96 98	萝卜
 T11	Color 100 101	金
@@ -121,7 +120,6 @@ T120	Nature 896 897	马
 T121	Nature 898 900	晨凫
 T122	Color 901 902	翠
 T123	Color 906 907	紫
-T124	Color 915 916	乌
 T125	Color 924 925	红
 T126	Nature 929 931	龙尾
 T127	Nature 935 936	竹
@@ -166,7 +164,7 @@ T165	Nature 1177 1179	月桂
 T166	Color 1185 1186	银
 T167	Color 1193 1194	彩
 T168	Nature 1197 1199	杏园
-T169	Color 1204 1205	金
+T169	Color 1203 1205	泥金
 T170	Color 1209 1210	金
 T171	Nature 1219 1220	花
 T172	Nature 1222 1224	高枝
@@ -177,8 +175,6 @@ T176	Color 1249 1250	金
 T177	Color 1257 1258	乌
 T178	Nature 1259 1261	宫花
 T179	Nature 1278 1280	灵凤
-T180	Nature 1287 1288	龙
-T181	Nature 1295 1296	凤
 T182	Nature 1302 1304	鸣凤
 T183	Nature 1305 1307	宫花
 T184	Color 1309 1310	红
@@ -218,3 +214,14 @@ T218	Nature 1337 1338	龟
 T219	Nature 1348 1349	龟
 T220	Nature 1379 1380	骢
 T221	Nature 1362 1364	駞峯
+T198	Nature 67 68	枝
+T8	Nature 77 80	郁金香
+T222	Nature 110 112	小菜
+T223	Nature 244 245	蚁
+T224	Color 631 632	玉
+T180	Color 1415 1416	丹
+T181	Color 1313 1315	玉髓
+T124	Color 915 916	乌
+T225	Color 998 999	玉
+T226	Color 981 982	玉
+T227	Color 1118 1119	玉

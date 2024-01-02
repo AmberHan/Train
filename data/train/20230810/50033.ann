@@ -2,7 +2,7 @@ T1	Color 22 23	金
 T2	Color 31 32	绿
 T3	Color 39 40	绿
 T4	Color 48 49	绿
-T5	Color 52 53	白
+T5	Color 52 54	白金
 T6	Nature 74 76	梅花
 T7	Nature 99 101	鳞鸿
 T8	Nature 112 114	雁鱼
@@ -20,7 +20,7 @@ T19	Color 203 204	白
 T20	Color 205 206	绿
 T21	Nature 207 208	鹊
 T22	Nature 212 213	花
-T23	Color 243 244	黄
+T23	Color 243 245	黄金
 T24	Nature 255 257	胡羊
 T25	Color 279 280	金
 T26	Nature 285 286	花
@@ -90,9 +90,10 @@ T89	Nature 986 988	松萝
 T90	Nature 999 1000	龙
 T91	Nature 1017 1019	鸾凤
 T92	Nature 1032 1033	猿
-T93	Color 53 54	金
-T94	Color 244 245	金
 T95	Nature 328 329	柏
 T96	Nature 396 397	林
-T97	Nature 876 877	龙
+T97	Nature 876 878	龙头
 T98	Nature 859 860	米
+T93	Nature 217 218	萱
+T94	Nature 595 596	桂
+T99	Color 967 968	青

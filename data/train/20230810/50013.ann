@@ -13,7 +13,7 @@ T12	Color 122 123	金
 T13	Color 124 125	银
 T14	Nature 129 131	肥鹅
 T15	Color 143 144	白
-T16	Color 145 146	黄
+T16	Color 145 147	黄金
 T17	Nature 159 161	雀屏
 T18	Color 185 186	黄
 T19	Color 200 201	青
@@ -41,7 +41,7 @@ T40	Color 392 393	丹
 T41	Nature 401 403	鸾凤
 T42	Color 403 404	青
 T43	Nature 409 411	鸳鸯
-T44	Color 411 412	碧
+T44	Color 411 413	碧玉
 T45	Nature 435 437	飞鸟
 T46	Nature 441 443	比翼
 T47	Nature 445 447	牆花
@@ -51,6 +51,5 @@ T50	Nature 479 481	春花
 T51	Color 497 498	蓝
 T52	Nature 94 95	叶
 T53	Nature 106 107	桂
-T54	Color 146 147	金
 T55	Nature 341 342	鸾
 T56	Nature 349 350	叶
