@@ -15,7 +15,7 @@ def read_csv(filename):
     return data
 
 
-def cal(labels):
+def cal(labels, category, all):
     # 实际的实体类别
     # 错误识别：如果实际是O,但模型预测为实体;一个为color，一个为nature,则是FP
     # 未能正确：如果实际是实体,但模型预测为O，则是FN
@@ -29,11 +29,11 @@ def cal(labels):
 
     # 计算FN和FP
     for label in labels:
-        if label[1] == "FN":
+        if label[1] == "FN" and (all or label[2] == category):
             FN += 1
-        elif label[1] == "FP":
+        elif label[1] == "FP" and (all or label[2] == category):
             FP += 1
-        elif label[1] == "TP":
+        elif label[1] == "TP" and (all or label[2] == category):
             TP += 1
 
     # 计算精确度
@@ -49,14 +49,14 @@ def cal(labels):
     acc = (TP + TN) / (TP + FP + FN + TN)
 
     # 打印FN、FP、精确度、召回率和F1分数
-    print("拼音+词边界：")  # 词性+词边界+偏旁部首+拼音：
-    print("真正例（TP）:", TP)
-    print("假负例（FN）:", FN)
-    print("假正例（FP）:", FP)
-    print("精确度:", precision)
-    print("召回率:", recall)
-    print("F1分数:", f1)
-    print("ACC:", acc)
+    print(50 * "*")
+    print(category+"真正例（TP）:", TP)
+    print(category+"假负例（FN）:", FN)
+    print(category+"假正例（FP）:", FP)
+    print(category+"精确度:", precision)
+    print(category+"召回率:", recall)
+    print(category+"F1分数:", f1)
+    print(category+"ACC:", acc)
 
 
 def write_csv(filename, ret):
@@ -75,9 +75,12 @@ def cal_csv(type):
     # 对文件进行排序
     csv_files.sort()  # reverse=True
     for i, file in enumerate(csv_files):
-        print("第" + str(i) + "轮*" + "*" * 100)
+        print(100 * " ")
+        print("---第" + str(i) + "轮---")
         data = read_csv(file)
-        cal(data)
+        cal(data, "Nature", False)
+        cal(data, "Color", False)
+        cal(data, "All", True)
         print("*" * 100)
 
 
