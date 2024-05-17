@@ -31,7 +31,7 @@ def get_labels(data):
             # print(label)
             labels.append(label)
         else:
-            label, i = get_Olabel(data, row[2], i)
+            label, i = get_Olabel(data, row[1], i)
             # print(label)
             labels.append(label)
     return labels
@@ -91,6 +91,12 @@ def get_Plabel(data, type, index):
 
 
 def get_Olabel(data, type, index):
+    if type.count("Color"):
+        type = "Color"
+    elif type.count("Nature"):
+        type = "Nature"
+    else:
+        type = "O"
     current_word = [data[index][0]]  # 用于构建当前的单词
     while index < len(data):
         index += 1
@@ -98,7 +104,7 @@ def get_Olabel(data, type, index):
             current_word.append(data[index][0])
         else:
             break
-    return [''.join(current_word), "FP", "O"], index  # 错误识别
+    return [''.join(current_word), "FP", type, "O"], index  # 错误识别
 
 
 def write_csv(filename, ret):
