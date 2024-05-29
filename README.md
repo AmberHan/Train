@@ -1,4 +1,6 @@
-# 目录介绍：
+# 基于神经网络的昆曲特征提取
+
+## 目录介绍：
 - data目录：包含train和prepare目录。train目录是训练的原始数据（predict.txt是需要预测的原始文本）；prepare目录是代码生成的
 - data/predict/results目录下是train生成的，共十轮；test.csv是测试集的结果；predict是预测集
 - data/prepare目录: 包含train、test、predict目录，分别存放生成的训练、测试、预测csv，用于生成pkl。
